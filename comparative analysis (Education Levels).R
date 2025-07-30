@@ -228,23 +228,26 @@ growth_data <- combined_data %>%
   mutate(
     `Growth Rate (%)` = round(((`2024` - `2017-2018`) / `2017-2018`) * 100, 1)
   )
+
+# Set Education Level order
 growth_data$`Education Level` <- factor(
   growth_data$`Education Level`,
   levels = c("Never attended", "Basic education", "Secondary/vocational", "Tertiary")
 )
 
-# Plotting the growth rates
-ggplot(growth_data, aes(x = `Education Level`, y = `Growth Rate (%)`, fill = Gender)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
-  facet_wrap(~Locality) +
+# Plotting: Facet by Gender, fill by Locality
+ggplot(growth_data, aes(x = `Education Level`, y = `Growth Rate (%)`, fill = Locality)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 1)) +
+  facet_wrap(~Gender) +
   geom_text(aes(label = paste0(`Growth Rate (%)`, "%")),
-            position = position_dodge(width = 0.8),
+            position = position_dodge(width = 1),
             vjust = -0.5,
-            size = 3.2) +
+            size = 5, # Increased text size
+            fontface = "bold")+
   labs(
-    title = "Growth Rates by Education Level, Gender, and Locality (2017–2018 to 2024)",
+    title = "Growth Rates by Education Level, Locality, and Gender (2017–2018 to 2024)",
     x = "Education Level",
     y = "Growth Rate (%)",
-    fill = "Gender"
+    fill = "Locality"
   ) +
   theme_minimal()
