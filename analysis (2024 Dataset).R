@@ -44,7 +44,7 @@ ggplot(combined_plot_data, aes(x = Gender, y = Value, fill = Locality)) +
             position = position_dodge(width = 0.7), 
             vjust = -0.5, size = 3) +
   labs(
-    title = "Urban vs Rural by Gender (2024 Dataset)",
+    title = "Urban vs Rural by Gender (2024)",
     x = "Gender",
     y = "Percentage"
   ) +
@@ -81,7 +81,7 @@ ggplot(compare_data, aes(x = Locality, y = Value, fill = Category)) +
             position = position_dodge(width = 0.7),
             vjust = -0.5, size = 3) +
   labs(
-    title = "Comparison of Never Attended vs Formal Education by Locality (2024 Dataset)",
+    title = "Comparison of Never Attended vs Formal Education by Locality (2024)",
     x = "Locality",
     y = "Percentage"
   ) +
@@ -108,7 +108,7 @@ ggplot(male_data, aes(x = Education.Level, y = Value, fill = Locality)) +
             position = position_dodge(width = 0.7), 
             vjust = -0.5, size = 3) +
   labs(
-    title = "Education Levels of Males by Locality (2024 Dataset)",
+    title = "Education Levels of Males by Locality (2024)",
     x = "Education Level",
     y = "Percentage"
   ) +
@@ -126,7 +126,7 @@ ggplot(female_data, aes(x = Education.Level, y = Value, fill = Locality)) +
             position = position_dodge(width = 0.7), 
             vjust = -0.5, size = 3) +
   labs(
-    title = "Education Levels of Females by Locality (2024 Dataset)",
+    title = "Education Levels of Females by Locality (2024)",
     x = "Education Level",
     y = "Percentage"
   ) +
