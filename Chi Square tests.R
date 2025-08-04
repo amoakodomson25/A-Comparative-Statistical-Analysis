@@ -1,23 +1,19 @@
 # Load required packages
 library(readxl)
 library(dplyr)
+library(tidyr)
 library(tibble)
-library(ggplot2)
+library(MASS)
 
-# 1. Import the Excel file
 tryCatch({
   data_2024 <- read_excel("2017-2018 data set.xlsx", sheet = "2024-figures", col_names = TRUE)
   
-  # View column names to check if renaming is needed
-  print("Original column names:")
-  print(colnames(data_2024))
-  
-  # Manually set column names if necessary
+  # Fix column names if needed
   if(length(colnames(data_2024)) != 4 || any(is.na(colnames(data_2024)))) {
     colnames(data_2024) <- c("Education", "Locality", "Male", "Female")
   }
   
-  # 2. Clean the data
+  # Clean the data
   clean_data <- data_2024 %>%
     filter(!is.na(Education), !Education %in% c("Total", "")) %>%
     mutate(
@@ -28,41 +24,38 @@ tryCatch({
     ) %>%
     filter(!is.na(Male), !is.na(Female), !is.na(Locality))
   
-  # 3. Perform chi-square tests
+  # Convert wide Male/Female into long format (Sex)
+  long_data <- clean_data %>%
+    pivot_longer(cols = c(Male, Female), names_to = "Sex", values_to = "Count")
+  
+  # Create contingency tables and run chi-square tests
   
   # Education vs Sex
-  edu_sex_table <- clean_data %>%
-    group_by(Education) %>%
-    summarise(Male = sum(Male), Female = sum(Female), .groups = 'drop') %>%
-    column_to_rownames("Education") %>%
-    as.matrix()
-  
-  cat("Education Attainment vs Sex:\n")
+  edu_sex_table <- xtabs(Count ~ Education + Sex, data = long_data)
+  cat("Education vs Sex:\n")
   print(chisq.test(edu_sex_table))
   
   # Education vs Locality
-  edu_loc_table <- clean_data %>%
-    group_by(Education) %>%
-    summarise(
-      Urban = sum((Male + Female)[Locality == "Urban"]),
-      Rural = sum((Male + Female)[Locality == "Rural"]),
-      .groups = 'drop'
-    ) %>%
-    column_to_rownames("Education") %>%
-    as.matrix()
-  
-  cat("\nEducation Attainment vs Locality:\n")
+  edu_loc_table <- xtabs(Count ~ Education + Locality, data = long_data)
+  cat("\nEducation vs Locality:\n")
   print(chisq.test(edu_loc_table))
   
   # Locality vs Sex
-  loc_sex_table <- clean_data %>%
-    group_by(Locality) %>%
-    summarise(Male = sum(Male), Female = sum(Female), .groups = 'drop') %>%
-    column_to_rownames("Locality") %>%
-    as.matrix()
-  
+  loc_sex_table <- xtabs(Count ~ Locality + Sex, data = long_data)
   cat("\nLocality vs Sex:\n")
   print(chisq.test(loc_sex_table))
+  
+  # Create 3-way contingency table
+  three_way_table <- xtabs(Count ~ Education + Locality + Sex, data = long_data)
+  
+  cat("Three-way table:\n")
+  print(three_way_table)
+  
+  # 1. Mutual Independence: [Education][Locality][Sex]
+  cat("\nTest for mutual (complete) independence:\n")
+  mutual_indep <- loglm(~ Education + Locality + Sex, data = three_way_table)
+  print(mutual_indep)
+  
   
   
   
@@ -71,7 +64,6 @@ tryCatch({
   
 }, error = function(e) {
   message("An error occurred: ", e$message)
-  message("\nDebugging info:")
   if (exists("data_2024")) {
     print(head(data_2024))
     print(colnames(data_2024))
