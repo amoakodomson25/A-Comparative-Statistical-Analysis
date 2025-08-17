@@ -53,7 +53,7 @@ ggplot(sex_edu_change, aes(x = `Education Level`, y = PercentChange, group = Sex
             vjust = -1, size = 4.5, color = "black") +
   facet_wrap(~ Sex) +
   labs(
-    title = "Percentage Change in Education Levels by Sex (2017-2018 to 2024)",
+    title = "Percentage Change in Education Levels by Gender (2017-2018 to 2024)",
     x = "Education Level",
     y = "Percentage Change",
     caption = "Percentage Change = ((2024 - 2017-2018) / 2017-2018) × 100"
@@ -66,6 +66,7 @@ ggplot(sex_edu_change, aes(x = `Education Level`, y = PercentChange, group = Sex
     strip.text = element_text(size = 13),
     legend.position = "none"
   )
+
 
 
 
@@ -116,7 +117,7 @@ ggplot(gender_gap, aes(x = `Education Level`, y = Gap, fill = Year)) +
             vjust = ifelse(gender_gap$Gap >= 0, -0.5, 1.3), 
             size = 4.5, color = "black") +
   facet_wrap(~Year) +
-  labs(title = "E: Gender Gap in Education Levels: Male - Female",
+  labs(title = "Gender Gap in Education Levels: Male - Female",
        subtitle = "Positive = more males; Negative = more females",
        y = "Gap (Male - Female)", x = "Education Level",
        caption = "Gender Gap = Total Male - Total Female") +
@@ -163,3 +164,9 @@ ggplot(gap_change, aes(x = `Education Level`, y = Change, group = 1)) +
     axis.title = element_text(size = 13),
     legend.position = "top"
   )
+
+
+print(sex_edu_change)
+print(locality_edu_change)
+print(gender_gap)
+print(gap_change)
