@@ -26,8 +26,16 @@ locality_edu_table <- data_2024 %>%
   ) %>%
   column_to_rownames(var = "Education")  # Set education levels as row names
 
-chi_test_locality <- chisq.test(locality_edu_table)
+chi_test_locality_edu <- chisq.test(locality_edu_table)
 
 # Print results
-cat("Chi-Square Test of Independence (Education × Locality):\n")
+# Compute Cramer's V
+chi2 <- chi_test_locality_edu$statistic   # Chi-square value
+n <- sum(locality_edu_table)   # Total sample size
+k <- min(dim(locality_edu_table))  # Smaller dimension
+cramers_v <- sqrt(chi2 / (n * (k - 1)))
+
+# Print results together
+cat("Chi-Square Test of Independence:\n")
 print(chi_test_locality)
+print(cramers_v)
