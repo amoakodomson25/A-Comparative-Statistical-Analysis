@@ -8,8 +8,13 @@ if(length(colnames(data_2024)) != 4 || any(is.na(colnames(data_2024)))) {
   colnames(data_2024) <- c("Education", "Locality", "Male", "Female")
 }
 
+# Remove "Total" row if it exists
+data_2024 <- data_2024 %>% 
+  filter(Education != "Total")
+
+
 # Create a contingency table: Education Level × Locality
-locality_edu_table <- clean_data %>%
+locality_edu_table <- data_2024 %>%
   group_by(Education, Locality) %>%
   summarise(
     Count = sum(Male + Female),  # Combine genders

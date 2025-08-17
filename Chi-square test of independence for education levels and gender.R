@@ -8,6 +8,9 @@ data_2024 <- read_excel("2017-2018 data set.xlsx", sheet = "2024-figures", col_n
 if(length(colnames(data_2024)) != 4 || any(is.na(colnames(data_2024)))) {
   colnames(data_2024) <- c("Education", "Locality", "Male", "Female")
 }
+# Remove "Total" row if it exists
+data_2024 <- data_2024 %>% 
+  filter(Education != "Total")
 
 # Create contingency table
 gender_edu_table <- data_2024 %>%
